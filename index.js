@@ -24,7 +24,7 @@ const users = [];
  *             example:
  *               message: API rodando!
  */
-app.get('/', (req, res) => res.json('API rodando!'));
+app.get('/', (_, res) => res.json('API rodando!'));
 
 /**
  * @swagger
@@ -53,10 +53,11 @@ app.get('/', (req, res) => res.json('API rodando!'));
 app.post('/user', (req, res) => {
   const user = users.find(user => user.cpf === req.body.cpf);
   const { cpf, nome, data_nascimento } = req.body;
-  users.push({ cpf, nome, data_nascimento });
 
-  if(user) res.status(409).json({ message: 'Usuário já cadastrado.' });
-  else res.status(201).json({ message: 'Usuário criado com sucesso!' });
+  if(user) return res.status(409).json({ message: 'Usuário já cadastrado.' });
+
+  users.push({ cpf, nome, data_nascimento });
+  res.status(201).json({ message: 'Usuário criado com sucesso!' });
 });
 
 /**
@@ -109,12 +110,9 @@ app.get('/user/:cpf', (req, res) => {
 *       404:
 *         description: Não há usuários cadastrados
 */
-app.get('/users', (req, res) => {
- if (users) {
-   res.json(users);
- } else {
-   res.status(404).json({ message: 'Não há usuários cadastrados' });
- }
+app.get('/users', (_, res) => {
+ if (users) return res.json(users);
+ res.status(404).json({ message: 'Não há usuários cadastrados' });
 });
 
 const PORT = process.env.PORT || 3030;
