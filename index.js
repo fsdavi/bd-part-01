@@ -8,6 +8,8 @@ app.use(cors());
 
 const users = [];
 
+app.get('/', (req, res) => res.json('API rodando!'));
+
 app.post('/user', (req, res) => {
   const user = users.find(user => user.cpf === req.body.cpf);
   const { cpf, nome, data_nascimento } = req.body;
